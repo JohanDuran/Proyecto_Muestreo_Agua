@@ -11,35 +11,35 @@ var filterMarker;//marcador movible para indicar areas de filtro
 
 function initMap() {
 
-  //creación del mapa
- map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 8,
-    center: {"lat":9.586920,"lng":-83.814613},
-    radius:19
-  });
+	  //creación del mapa
+	 map = new google.maps.Map(document.getElementById('map'), {
+	    zoom: 8,
+	    center: {"lat":9.586920,"lng":-83.814613},
+	    radius:19
+	  });
 
 
-//marcador draggable para aplicar filtro
- filterMarker = new google.maps.Marker({
-    map: map,
-    draggable:true,
-    icon: "data/Templatic-map-icons/arts-crafts.png",
-    title:"colocar en area de filtro",
-    position:{"lat":9.904446,"lng":-84.026786}
-  });
+	//marcador draggable para aplicar filtro
+	 filterMarker = new google.maps.Marker({
+	    map: map,
+	    draggable:true,
+	    icon: "data/Templatic-map-icons/arts-crafts.png",
+	    title:"colocar en area de filtro",
+	    position:{"lat":9.904446,"lng":-84.026786}
+	  });
 
- //inserción de todos los marcadores presentes en la BD
- insertMarker();
-//map.addListener('click', function(e) {
-  //placeMarkerAndPanTo(e.latLng, map);
-//});
-
+	 //inserción de todos los marcadores presentes en la BD
+	 insertMarker();
+	//map.addListener('click', function(e) {
+	  //placeMarkerAndPanTo(e.latLng, map);
+	//});
 }
 
 
 function  insertMarker(){
 //peticion ajax al servidor
   $.ajax({
+      async:true,
       url: "php/getLocations.php",//devuelve un json con los marcadores que están en la base de datos.
       dataType: "json",
       success:pintar
@@ -49,19 +49,19 @@ function  insertMarker(){
 
 
 function pintar(jsonData){
-  //alert(jsonData);
-for (var i = 0; i < jsonData.length; i++) {
-    markers[i] = new google.maps.Marker({
-    map: map,
-    position:{"lat":jsonData[i].latitud,"lng":jsonData[i].longitud},
-    title: 'Calidad del agua: '+calidad[jsonData[i].nivel],
-    icon:"http://maps.google.com/mapfiles/ms/icons/"+colors[jsonData[i].nivel]+"-dot.png"
-  });
-  //markers[i].setAlpha=2;
-  niveles[i]=jsonData[i].nivel;
+  //alert(jsonData[0].location.lat+" "+jsonData[0].location.lng+" "+jsonData[0].color);
+	for (var i = 0; i < jsonData.length; i++) {
+	    markers[i] = new google.maps.Marker({
+	    map: map,
+	    position:jsonData[i].location,
+	    title: 'Calidad del agua: '+jsonData[i].color,
+	    icon:"data/Templatic-map-icons/"+jsonData[i].color+".png"
+	  });
+	  //markers[i].setAlpha=2;
+	  niveles[i]=jsonData[i].color;
+	}
 }
 
-}
 
 
 //eventos de los botones de calidades de agua
