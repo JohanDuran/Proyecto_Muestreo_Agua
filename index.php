@@ -1,3 +1,3 @@
-<?php 
-	require 'Vista/index_map.html'
+<?php
+require 'html/paginaPrincipal.html';
 ?>
